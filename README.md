@@ -1,3 +1,7 @@
+> [!IMPORTANT]
+> 这是 [jean3690/dsh-drawio](https://github.com/jean3690/dsh-drawio) 的一个 Fork 版本。
+> 本版本主要目的是适配 DSH 0.2.0-rc.2，属于个人自用修改，非官方版本。
+
 # dsh-drawio
 
 DSH（DeepSeek Harness）Web GUI 的 diagrams.net（drawio）插件：**agent 画图工具 + 侧边栏「Drawio 画板」**，工作区 `.drawio` 文件所见即所得。
