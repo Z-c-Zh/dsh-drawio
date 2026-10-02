@@ -23,9 +23,8 @@ const PLUGIN_ID = 'dsh-drawio'
 
 /**
  * Module specifiers the shell shares into the frozen browser module table
- * (packages/client/web/src/platform.ts) plus the runtime store exemption
- * (`@deepseek-ai/dsh-client-runtime/client`). Any value import outside this
- * list must be inlined.
+ * (packages/client/web/src/platform.ts @ dsh 0.2.0). Any value import outside
+ * this list must be inlined.
  */
 const PLATFORM_EXTERNALS: readonly string[] = [
   'react',
@@ -33,12 +32,10 @@ const PLATFORM_EXTERNALS: readonly string[] = [
   'react-dom',
   'react-dom/client',
   '@deepseek-ai/cordis',
+  '@deepseek-ai/dsh-client-store',
   '@deepseek-ai/dsh-client-ui-slots',
-  '@deepseek-ai/dsh-client-web-react',
   '@deepseek-ai/dsh-client-ui-primitives',
-  '@deepseek-ai/dsh-client-ui-attachment',
-  '@deepseek-ai/dsh-client-schema-form',
-  '@deepseek-ai/dsh-client-runtime/client',
+  '@deepseek-ai/dsh-client-ui-dockkit',
 ]
 
 /**
@@ -62,12 +59,9 @@ export default defineConfig([
     // ESM output under a "type": "module" package must land on .js, not .mjs.
     fixedExtension: false,
     deps: {
-      // Bundle zod only (the sole non-peer dependency besides the native
-      // rasterizer, which cannot be bundled): keeps the host half
-      // self-contained. @resvg/resvg-js stays a regular dependency installed
-      // into the profile (native prebuilds are not bundleable).
-      onlyBundle: ['zod'],
-      alwaysBundle: ['zod'],
+      // Bundle the pure-TS shared translator into the host half;
+      // @resvg/resvg-js stays a regular dependency installed into the profile
+      // (native prebuilds are not bundleable), node builtins stay external.
       neverBundle: [/^node:/, '@resvg/resvg-js'],
     },
   },
@@ -83,7 +77,7 @@ export default defineConfig([
     deps: {
       // Platform modules stay external (the factory's `require` answers them
       // from the shell's frozen module table); every other import is inlined
-      // (zod, the CSS Modules shims, the shared translator).
+      // (the CSS Modules shims, the shared translator).
       onlyBundle: false,
       alwaysBundle: (id: string) => (PLATFORM_EXTERNALS.includes(id) ? undefined : true),
       neverBundle: [...PLATFORM_EXTERNALS],

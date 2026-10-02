@@ -96,8 +96,9 @@ function sessionCwd(ctx: Context): string {
   try {
     const sessions = ctx.sessions.list()
     for (let i = sessions.length - 1; i >= 0; i -= 1) {
-      const session = sessions[i] as unknown as { meta?: { cwd?: unknown }; cwd?: unknown }
-      const cwd = session.meta?.cwd ?? session.cwd
+      // 0.2.0: creation metadata lives on `session.header` (SessionHeader.cwd).
+      const session = sessions[i] as unknown as { header?: { cwd?: unknown }; meta?: { cwd?: unknown }; cwd?: unknown }
+      const cwd = session.header?.cwd ?? session.meta?.cwd ?? session.cwd
       if (typeof cwd === 'string' && cwd !== '') return cwd
     }
   } catch {

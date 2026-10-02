@@ -15,10 +15,15 @@ import { t } from './i18n.ts'
 import { drainOpenPaths, subscribeOpenPath } from './open-queue.ts'
 import styles from './board.module.css'
 
-/** Session store shape the board reads the workspace root from. */
+/**
+ * Session store shape the board reads the workspace root from (0.2.0 face:
+ * `ctx.sessions.list`, an ObservableSnapshot over SessionListState).
+ */
 export interface SessionListStore {
   subscribe: (listener: () => void) => () => void
-  getSnapshot: () => { current?: string; byId: Record<string, { cwd?: string }> }
+  getSnapshot: () => {
+    byId: Record<string, { id?: string; cwd?: string; retainedBy?: { mainView?: number } }>
+  }
 }
 
 const ICON_SVG = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v13H4z"/><path d="M4 9h16"/><circle cx="7.5" cy="12.5" r="1.2" fill="currentColor" stroke="none"/><circle cx="12" cy="12.5" r="1.2" fill="currentColor" stroke="none"/><path d="M9 17l3-3 2 2 2-3"/></svg>`
@@ -748,7 +753,9 @@ function useSyncExternalStoreSafe(sessions: SessionListStore): string {
 function currentRoot(sessions: SessionListStore): string {
   try {
     const snapshot = sessions.getSnapshot()
-    const id = snapshot.current
+    // 0.2.0: the list snapshot no longer names the current session — the
+    // active one is the row the main view retains (DocumentTitle precedent).
+    const id = Object.values(snapshot.byId).find(session => (session.retainedBy?.mainView ?? 0) > 0)?.id
     const cwd = id === undefined ? undefined : snapshot.byId[id]?.cwd
     return typeof cwd === 'string' && cwd !== '' ? cwd : ''
   } catch {

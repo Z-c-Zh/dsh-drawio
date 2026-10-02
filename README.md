@@ -44,6 +44,8 @@ DSH（DeepSeek Harness）Web GUI 的 diagrams.net（drawio）插件：**agent �
 
 ## 安装
 
+适配 DSH **0.2.0-rc.2**（Web GUI / `dsh web`；宿主与客户端 API 按 0.2.0-rc.2 对齐）。
+
 ```bash
 dsh plugin --profile web add https://github.com/jean3690/dsh-drawio
 ```

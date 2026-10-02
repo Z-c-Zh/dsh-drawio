@@ -10,7 +10,10 @@
  * @module dsh-drawio/client
  */
 
-import type { ClientContext } from '@deepseek-ai/dsh-client-runtime/client'
+import type { Context } from '@deepseek-ai/cordis'
+// Type-only merges: ctx.sessions (api-session-controller), ctx.locale (locale),
+// and the LocaleNamespaceMap augmentation surface (ui-slots).
+import type {} from '@deepseek-ai/dsh-api-session-controller/client'
 import type {} from '@deepseek-ai/dsh-client-locale/client'
 import type {} from '@deepseek-ai/dsh-client-ui-slots'
 import { DrawioController } from './controller.ts'
@@ -50,7 +53,7 @@ function makeApi(root: string): DrawioRemote {
  *
  * @param ctx - client root context.
  */
-export async function apply(ctx: ClientContext): Promise<void> {
+export async function apply(ctx: Context): Promise<void> {
   ctx.effect(() => ctx.locale.register(NS, { zh: ZH, en: EN }), 'dsh-drawio: dictionaries')
 
   const controller = new DrawioController()
