@@ -44,10 +44,10 @@ DSH（DeepSeek Harness）Web GUI 的 diagrams.net（drawio）插件：**agent �
 
 ## 安装
 
-适配 DSH **0.2.0-rc.2**（Web GUI / `dsh web`；宿主与客户端 API 按 0.2.0-rc.2 对齐）。
+要求 DSH **>= 0.2.0-rc.2**（`engines.dsh` 与 dsh peer 声明为开放范围，按 0.2.0-rc.2 适配测试；Web GUI / `dsh web`）。
 
 ```bash
-dsh plugin --profile web add https://github.com/jean3690/dsh-drawio
+dsh plugin --profile web add https://github.com/Z-c-Zh/dsh-drawio
 ```
 
 重启 `dsh web` 后生效：侧边栏出现「Drawio 画板」入口，四个 `drawio_*` 工具进入模型工具集，skill 自动可加载，内置 drawio webapp 挂在 `/drawio/*`。
